@@ -1,14 +1,16 @@
+// CREATE USER CONTROL
 import { pool } from "../../config/connection.js";
 
 const query = `INSERT INTO users (full_name, email, password, has_created_account) VALUES ($1, $2, $3, $4)`;
 
-const createUser = async (minta, res) => {
+const createUser = async (req, res) => {
   try {
-    const full_name = minta.body.full_name;
-    const email = minta.body.email;
-    const password = minta.body.password;
-    const has_created_account = minta.body.has_created_account;
+    const full_name = req.body.full_name;
+    const email = req.body.email;
+    const password = req.body.password;
+    const has_created_account = req.body.has_created_account;
 
+    // validate about fill in all fields
     if (!full_name || !email || !password) {
       res.status(400).json({
         message: "Please fill all the fields",
@@ -16,6 +18,7 @@ const createUser = async (minta, res) => {
       return;
     }
 
+    // validate email
     const emailRegex =
       /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     if (!emailRegex.test(email)) {
@@ -25,6 +28,18 @@ const createUser = async (minta, res) => {
       return;
     }
 
+    // validate existing email
+    const emailQuery = `SELECT * FROM users WHERE email = $1`;
+    const existingEmail = await pool.query(emailQuery, [email]);
+    if (existingEmail.rows.length > 0) {
+      console.log(existingEmail);
+      res.status(400).json({
+        message: "Email already exists",
+      });
+      return;
+    }
+
+    // profile creation
     await pool.query(query, [full_name, email, password, has_created_account]);
     res.status(200).json({
       message: "User is created",

@@ -5,7 +5,6 @@ import transactionsRoute from "./routes/transactions/transactionsRoute.js";
 import "./config/connection.js ";
 import cors from "cors";
 import { databaseConnect } from "./config/connection.js";
-import readAllUsers from "./controllers/users/read.js";
 
 const app = express();
 const PORT = 3000;
@@ -15,7 +14,7 @@ const TEST = process.env.TEST;
 console.log("Testing:", TEST);
 
 // MIDDLEWARE
-// cross-origin resources sharing
+// CORS cross-origin resources sharing
 app.use(cors());
 // allow and parse app/json to access req.body
 app.use(express.json());
