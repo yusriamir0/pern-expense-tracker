@@ -1,5 +1,6 @@
 // CREATE USER CONTROL
 import { pool } from "../../config/connection.js";
+import bcrypt, { genSalt } from "bcrypt";
 
 const query = `INSERT INTO users (full_name, email, password, has_created_account) VALUES ($1, $2, $3, $4)`;
 
@@ -39,8 +40,19 @@ const createUser = async (req, res) => {
       return;
     }
 
+    //  bcrypt passwords
+    const saltRounds = 10;
+    // hash the password
+    const salt = bcrypt.genSaltSync(saltRounds);
+    const hashedPassword = bcrypt.hashSync(password, salt);
+
     // profile creation
-    await pool.query(query, [full_name, email, password, has_created_account]);
+    await pool.query(query, [
+      full_name,
+      email,
+      hashedPassword,
+      has_created_account,
+    ]);
     res.status(200).json({
       message: "User is created",
     });
@@ -48,6 +60,7 @@ const createUser = async (req, res) => {
     res.status(500).json({
       message: "Internal Server Error",
     });
+    console.log(error.message);
   }
 };
 
