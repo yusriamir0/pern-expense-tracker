@@ -5,6 +5,7 @@ const queryUserById = "SELECT * FROM users WHERE id = $1";
 
 const readUserById = async (req, res) => {
   try {
+    // check if user is exist
     const id = req.params.id;
     const dbRes = await pool.query(queryUserById, [id]);
     const data = dbRes.rows;
