@@ -13,7 +13,7 @@ const readUserById = async (req, res) => {
       res.status(404).json({ message: "User not found" });
       return;
     }
-    res.status(200).json({ message: "User found!" });
+    res.status(200).json({ message: "User found!", data: data });
   } catch (error) {
     res.status(500).json({ message: "Internal Server Error" });
     console.log(error.message);

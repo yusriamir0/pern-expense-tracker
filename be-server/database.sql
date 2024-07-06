@@ -17,7 +17,7 @@ CREATE TYPE account_type AS ENUM(
     'Grocery',
     'Food',
     'Entertainment',
-    'Other',
+    'Other'
 ) 
 
 CREATE TABLE transaction(
@@ -27,7 +27,7 @@ CREATE TABLE transaction(
     initial_balance NUMERIC(7,2) 0,
     transaction 
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    account_type account_type NOT NULL,
+    account_type account_type NOT NULL, 
     
 )
 

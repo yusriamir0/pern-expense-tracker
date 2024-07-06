@@ -9,6 +9,7 @@ const createTransaction = async (req, res) => {
     const text = req.body.text;
     const amount = req.body.amount;
     const user_id = req.body.user_id;
+    console.log(user_id);
 
     // validate about fill in all fields
     if (!text || !amount || !user_id) {

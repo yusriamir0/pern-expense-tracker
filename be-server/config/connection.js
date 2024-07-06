@@ -1,7 +1,8 @@
 import pg from "pg";
-import createTransaction from "../model/Transaction.js";
-import createUserTable from "../model/User.js";
 import dotenv from "dotenv";
+import createUserTable from "../model/User.js";
+import createAccountTable from "../model/Account.js";
+import createTransactionTable from "../model/Transaction.js";
 
 dotenv.config();
 
@@ -27,7 +28,8 @@ const databaseConnect = async () => {
       `Database connected successfully at database name: ${currentDatabase} at time: ${time}`
     );
     await createUserTable();
-    await createTransaction();
+    await createAccountTable();
+    await createTransactionTable();
   } catch (error) {
     console.log(error);
     console.log("Database connection failed");

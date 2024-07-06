@@ -3,19 +3,16 @@ import usersRoute from "./routes/users/usersRoute.js";
 import accountsRoute from "./routes/accounts/accountsRoute.js";
 import transactionsRoute from "./routes/transactions/transactionsRoute.js";
 import "./config/connection.js ";
-import cors from "cors";
 import { databaseConnect } from "./config/connection.js";
+import dotenv from "dotenv";
+import { pool } from "./config/connection.js";
+import globalErrHandler from "./middlewares/globalErrHandler.js";
+
+dotenv.config();
 
 const app = express();
-const PORT = 3000;
-
-// Testing for environment variables
-const TEST = process.env.TEST;
-console.log("Testing:", TEST);
 
 // MIDDLEWARE
-// CORS cross-origin resources sharing
-app.use(cors());
 // allow and parse app/json to access req.body
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -33,15 +30,11 @@ app.use("/api/v1/accounts", accountsRoute);
 // * TRANSACTION ROUTES
 app.use("/api/v1/transactions", transactionsRoute);
 
-// error handlers
-app.use((req, res) => {
-  res.status(404).json({ msg: "Page not found" });
-});
-app.use((err, req, res) => {
-  res.status(500).json({ msg: "Something went wrong" });
-});
+// ERROR HANDLERS
+app.use(globalErrHandler);
 
 // listen to the server
+const PORT = process.env.PORT;
 app.listen(PORT, () => console.log(`This server is running at PORT ${PORT}`));
 
 // http://localhost:3000/api/v1/users

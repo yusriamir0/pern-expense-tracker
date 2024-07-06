@@ -1,19 +1,21 @@
-// READ ALL USER CONTROL
+// READ ALL TRANSACTIONS WHICH BELONG TO THE USER (CONTROL)
 import { pool } from "../../config/connection.js";
 
-const queryAllTransactions = "SELECT * FROM transactions WHERE user_id = $1";
-
 const readAllTransactions = async (req, res) => {
+  const userId = req.userId;
+  console.log(userId);
+
   try {
-    const user_id = req.params.user_id;
+    const queryAllTransactions =
+      "SELECT * FROM transactions WHERE user_id = $1";
     // read all existing transactions
-    const dbRes = await pool.query(queryAllTransactions, [user_id]);
+    const dbRes = await pool.query(queryAllTransactions, [userId]);
     const data = dbRes.rows;
 
     // send response with all transactions of the user
     res
       .status(200)
-      .json({ data: data, message: `${data.length} transaction(s) found` });
+      .json({ message: `${data.length} transaction(s) found`, data });
   } catch (error) {
     res.status(500).json({ message: "Internal Server Error" });
     console.log(error.message);
