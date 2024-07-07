@@ -4,18 +4,14 @@ import accountsRoute from "./routes/accounts/accountsRoute.js";
 import transactionsRoute from "./routes/transactions/transactionsRoute.js";
 import "./config/connection.js ";
 import { databaseConnect } from "./config/connection.js";
-import dotenv from "dotenv";
-import { pool } from "./config/connection.js";
 import globalErrHandler from "./middlewares/globalErrHandler.js";
-
-dotenv.config();
 
 const app = express();
 
 // MIDDLEWARE
 // allow and parse app/json to access req.body
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.json()); // backend interaction
+app.use(express.urlencoded({ extended: true })); // frontend interaction
 
 // Initialize database connection and execute DDL queries
 databaseConnect();

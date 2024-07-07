@@ -16,12 +16,13 @@ usersRoute.post("/register", createUser);
 
 // POST/api/v1/users/login
 usersRoute.post("/login", loginUser);
+usersRoute.get("/login", isAuth, loginUser);
 
 // GET/api/v1/users/profile/ ALL Users
-usersRoute.get("/profile", readAllUsers);
+usersRoute.get("/profile", isAuth, readAllUsers);
 
 // GET/api/v1/users/profile/:id SINGLE Users
-usersRoute.get("/profile/:id", isAuth, readUserById);
+usersRoute.get("/profile/:id", readUserById);
 
 // DELETE/api/v1/users/:id
 usersRoute.delete("/:id", deleteUserCtrl);
