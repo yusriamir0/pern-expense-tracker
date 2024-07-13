@@ -14,14 +14,15 @@ const readAllUsers = async (req, res, next) => {
       for (let user of users) {
         const accountsQuery = `SELECT * FROM accounts WHERE created_by = $1`;
         const accountsRes = await pool.query(accountsQuery, [user.id]);
-          const accounts = accountsRes.rows;
+        const accounts = accountsRes.rows;
 
         for (let account of accounts) {
           const transactionsQuery = `SELECT * FROM transactions WHERE account_id= $1`;
           const transactionsRes = await pool.query(transactionsQuery, [
             account.account_id,
           ]);
-          account.transactions = transactionsRes.rows;
+          const transactions = transactionsRes.rows;
+          account.transactions = transactions;
         }
         user.accounts = accounts;
       }

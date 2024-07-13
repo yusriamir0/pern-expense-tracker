@@ -1,8 +1,8 @@
 // DELETE USER CONTROL
 import { pool } from "../../config/connection.js";
 
-const deleteTransactionById = "DELETE FROM transactions WHERE id = $1";
 const queryTransactionById = "SELECT * FROM transactions WHERE id = $1";
+const deleteTransactionById = "DELETE FROM transactions WHERE id = $1";
 
 const deleteTransactionCtrl = async (req, res) => {
   try {
