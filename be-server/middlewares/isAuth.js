@@ -39,7 +39,6 @@
 //     // check if token valid
 //     const decodedUser = verifyToken(token);
 //     console.log(decodedUser);
-
 //     // pass user id to the next middleware or controller
 //     req.userId = decodedUser.id;
 //     next();
@@ -65,15 +64,14 @@ const isAuth = (req, res, next) => {
 
   // check if token valid
   const token = bearerToken.split(" ")[1];
-  console.log(token);
+
   jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
     if (err) {
       return res.status(403).json({ message: "Invalid token" });
     }
-    console.log(decoded);
+
     // pass user id to the next middleware or controller
     req.userId = decoded.id;
-    req.userEmail = decoded.email;
     next();
   });
 };

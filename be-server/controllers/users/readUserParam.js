@@ -3,14 +3,14 @@
 import { pool } from "../../config/connection.js";
 const queryUserById = "SELECT * FROM users WHERE id = $1";
 
-const readUserById = async (req, res) => {
+const readUserByParam = async (req, res) => {
   try {
     // check if user is exist
     const id = req.params.id;
     const dbRes = await pool.query(queryUserById, [id]);
     const data = dbRes.rows;
     if (data.length === 0) {
-      res.status(404).json({ message: "User not found" });
+      res.status(404).json({ message: "User tak jumpa" });
       return;
     }
     res.status(200).json({ message: "User found!", data: data });
@@ -20,4 +20,4 @@ const readUserById = async (req, res) => {
   }
 };
 
-export default readUserById;
+export default readUserByParam;

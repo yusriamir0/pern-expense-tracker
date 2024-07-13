@@ -1,41 +1,27 @@
-// READ ALL USER CONTROL
-import e from "express";
+// READ USER BY TOKEN CONTROL
+
 import { pool } from "../../config/connection.js";
+const queryUserById = "SELECT * FROM users WHERE id = $1";
 
-const readAllUsers = async (req, res, next) => {
+const readUserToken = async (req, res) => {
   try {
-    // 1. Query to get all users
-    const queryAllUsers = "SELECT * FROM users";
-    const userRes = await pool.query(queryAllUsers);
-    const users = userRes.rows;
-
-    if (users.length > 0) {
-      // 2. For each user, retrieve their accounts and transactions
-      for (let user of users) {
-        const accountsQuery = `SELECT * FROM accounts WHERE created_by = $1`;
-        const accountsRes = await pool.query(accountsQuery, [user.id]);
-          const accounts = accountsRes.rows;
-
-        for (let account of accounts) {
-          const transactionsQuery = `SELECT * FROM transactions WHERE account_id= $1`;
-          const transactionsRes = await pool.query(transactionsQuery, [
-            account.account_id,
-          ]);
-          account.transactions = transactionsRes.rows;
-        }
-        user.accounts = accounts;
-      }
-      res.status(200).json({ users });
-    } else {
-      res.status(404).json({ message: "No user found!" });
+    // check if user is exist
+    const userId = req.userId;
+    const dbRes = await pool.query(queryUserById, [userId]);
+    const data = dbRes.rows;
+    console.log(data);
+    if (data.length === 0) {
+      res.status(404).json({ message: "User tak jumpa" });
+      return;
     }
+    res.status(200).json({ message: "User found!", data: data });
   } catch (error) {
-    res.status(500).json({ message: "Server Internal Error" });
+    res.status(500).json({ message: "Internal Server Error" });
     console.log(error.message);
   }
 };
 
-export default readAllUsers;
+export default readUserToken;
 
 // * BELOW code has been refactored by separating the code to getTokenFromHeader.js file
 // GET the token from the header using split method

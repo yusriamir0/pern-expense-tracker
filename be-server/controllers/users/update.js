@@ -1,27 +1,43 @@
 // UPDATE USER CONTROL
 import { pool } from "../../config/connection.js";
-
-const updateById = "UPDATE users SET full_name = $1, email = $2 WHERE id = $3";
-const queryUserById = "SELECT * FROM users WHERE id = $1";
+import bcrypt from "bcrypt";
 
 const updateUserCtrl = async (req, res) => {
   try {
-    const full_name = req.body.full_name;
-    const email = req.body.email;
-    const id = req.params.id;
+    const userId = req.userId;
+    const { full_name, email, password } = req.body;
+
+    // check if user id already exists
+    const queryUserById = "SELECT * FROM users WHERE id = $1";
+    const dbRes = await pool.query(queryUserById, [userId]);
+    const data = dbRes.rows;
+    if (data.length === 0) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // check if user update the password by using brcrypt
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
 
     // validate request body
-    if (!full_name || !email) {
+    const updateById =
+      "UPDATE users SET full_name = $1, email = $2, password = $3 WHERE id = $4";
+    if (!full_name || !email || !hashedPassword) {
       res.status(404).json({ error: "Invalid request body" });
       return;
     }
-    // check if user id already exists
-    const dbRes = await pool.query(queryUserById, [id]);
-    const data = dbRes.rows;
 
-    if (data.length === 0) {
-      res.status(404).json({ message: "User not found" });
-      return;
+    // validate password length
+    const minPasswordLength = 8;
+    if (password.length < minPasswordLength) {
+      return res.status(400).json({
+        message: `Password should be at least ${minPasswordLength} characters long`,
+      });
+    }
+    
+    // check password is required
+    if (!password) {
+      return res.status(400).json({ message: "Password is required" });
     }
 
     // validate email
@@ -34,11 +50,19 @@ const updateUserCtrl = async (req, res) => {
       return;
     }
 
-    await pool.query(updateById, [full_name, email, id]);
-    res.status(201).json("Succesfully updated the user");
+    // validate existing email
+    const queryEmail = `SELECT * FROM users WHERE email =$1`;
+    const emailRes = await pool.query(queryEmail, [email]);
+    const emailExist = emailRes.rows;
+    if (emailExist.length > 0) {
+      return res.status(200).json({ message: "Email already exists" });
+    }
+
+    await pool.query(updateById, [full_name, email, hashedPassword, userId]);
+    res.status(201).json({ message: "Succesfully updated the user" });
   } catch (error) {
     res.status(500).json({ message: "Internal Server Error" });
-    console.log(error.message);
+    console.log(error);
   }
 };
 

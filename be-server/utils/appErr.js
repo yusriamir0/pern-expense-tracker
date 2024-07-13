@@ -8,7 +8,7 @@ const appErr = (message, statusCode, status, stack) => {
   return err;
 };
 
-// Using class : add new keyword before appErr
+// Using class : add 'new' keyword before appErr
 // class appErr extends Error {
 //   constructor(message, statusCode, status) {
 //     super(message);

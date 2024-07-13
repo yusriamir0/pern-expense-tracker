@@ -1,10 +1,9 @@
 import { pool } from "../config/connection.js";
 
 const query = `
-
 CREATE TYPE account_type AS ENUM(
   'Savings',
-  'Invesment',
+  'Investment',
   'Checking',
   'Credit card',
   'Building',
@@ -21,12 +20,14 @@ CREATE TYPE account_type AS ENUM(
   'Other'
 );
 
-CREATE TABLE IF NOT EXISTS accounts (
-  name VARCHAR(255) UNIQUE NOT NULL,
+CREATE TABLE IF NOT EXISTS accounts(
+  id serial PRIMARY KEY,
+  account_id UUID DEFAULT gen_random_uuid() UNIQUE,
+  name VARCHAR(255) NOT NULL,
   account_type account_type NOT NULL,
   initial_balance NUMERIC(7,2) DEFAULT 0,
-  id serial PRIMARY KEY, -- will be pushed to Transactions model
-  user_id INTEGER REFERENCES users(id),
+  notes TEXT,
+  created_by INTEGER REFERENCES users(id),
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 )
 `;
@@ -34,8 +35,19 @@ CREATE TABLE IF NOT EXISTS accounts (
 const createAccountTable = async () => {
   try {
     await pool.query(query);
-    console.log("User account created");
+    console.log("Account created");
   } catch (error) {}
 };
 
 export default createAccountTable;
+
+// * ALTERNATIVE
+// CREATE TABLE accounts (
+//   id SERIAL PRIMARY KEY,
+//   account_id UUID DEFAULT gen_random_uuid(),
+//   name VARCHAR(255),
+//   account_type VARCHAR(50),
+//   initial_balance NUMERIC,
+//   notes TEXT,
+//   created_by INT
+// );

@@ -8,7 +8,7 @@ const query = `INSERT INTO users (full_name, email, password, has_created_accoun
 const createUser = async (req, res, next) => {
   try {
     const { full_name, email, password } = req.body;
-    const has_created_account = req.body.has_created_account;
+    const has_created_account = req.body.has_created_account 
 
     // check if fields are empty
     if (!full_name || !email || !password) {
@@ -38,7 +38,7 @@ const createUser = async (req, res, next) => {
     const salt = await bcrypt.genSalt(saltRounds);
     const hashedPassword = await bcrypt.hash(password, salt);
 
-    // profile creation
+    // profile creation 
     await pool.query(query, [
       full_name,
       email,

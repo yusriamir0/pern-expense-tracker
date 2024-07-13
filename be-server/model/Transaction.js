@@ -22,22 +22,33 @@ CREATE TYPE category AS ENUM(
 );
 
 CREATE TABLE IF NOT EXISTS transactions(
-  name VARCHAR(255) NOT NULL,
+  id SERIAL PRIMARY KEY,   
+  account_id UUID REFERENCES accounts(account_id),
+  amount NUMERIC NOT NULL,
   transaction_type transaction_type NOT NULL,
+  description TEXT,
   category category NOT NULL,
-  amount INT NOT NULL,
-  user_id INTEGER REFERENCES users(id),
   date DATE NOT NULL DEFAULT CURRENT_DATE,
-  created_at TIMESTAMP DEFAULT NOW(),
-  id SERIAL PRIMARY KEY
+  created_at TIMESTAMP DEFAULT NOW()
 )
 `;
 
 const createTransactionTable = async () => {
   try {
     await pool.query(query);
-    console.log("Transaction created");
+    console.log("Transaction successfully created");
   } catch (error) {}
 };
 
 export default createTransactionTable;
+
+// * ALTERNATIVE
+// CREATE TABLE transactions (
+//   id SERIAL PRIMARY KEY,
+//   account_id UUID,
+//   amount NUMERIC,
+//   transaction_type VARCHAR(50),
+//   date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+//   description TEXT,
+//   FOREIGN KEY (account_id) REFERENCES accounts(account_id)
+// );

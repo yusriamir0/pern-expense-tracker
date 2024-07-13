@@ -16,7 +16,7 @@ const pool = new Pool({
   database: process.env.PGDATABASE,
 });
 
-const databaseConnect = async () => {
+const databaseConnect = async (next) => {
   try {
     const dbres = await pool.query("SELECT current_database()");
     const currentDatabase = dbres.rows[0].current_database;

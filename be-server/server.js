@@ -1,10 +1,11 @@
 import express from "express";
 import usersRoute from "./routes/users/usersRoute.js";
-import accountsRoute from "./routes/accounts/accountsRoute.js";
+
 import transactionsRoute from "./routes/transactions/transactionsRoute.js";
 import "./config/connection.js ";
 import { databaseConnect } from "./config/connection.js";
 import globalErrHandler from "./middlewares/globalErrHandler.js";
+import accountsRoute from "./routes/accounts/accountsRoute.js";
 
 const app = express();
 
