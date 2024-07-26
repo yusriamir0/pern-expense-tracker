@@ -2,17 +2,16 @@
 import { pool } from "../../config/connection.js";
 
 const updateTransactionById =
-  "UPDATE transactions SET text = $1, amount = $2 WHERE id = $3";
+  "UPDATE transactions SET amount = $1 WHERE account_id = $2";
 const queryTransactionById = "SELECT * FROM transactions WHERE id = $1";
 
 const updateTransactionCtrl = async (req, res) => {
   try {
-    const text = req.body.text;
-    const amount = req.body.amount;
+    const { amount, account_id } = req.body;
     const id = req.params.id;
 
     // validate request body
-    if (!text || !amount) {
+    if (!amount || !account_id) {
       res.status(404).json({ error: "Invalid request body" });
       return;
     }
@@ -25,8 +24,8 @@ const updateTransactionCtrl = async (req, res) => {
       return;
     }
 
-    await pool.query(updateTransactionById, [text, amount, id]);
-    res.status(201).json("Succesfully updated the transaction");
+    await pool.query(updateTransactionById, [amount, account_id]);
+    res.status(201).json({ message: "Succesfully updated the transaction" });
   } catch (error) {
     res.status(500).json({ message: "Internal Server Error" });
     console.log(error.message);

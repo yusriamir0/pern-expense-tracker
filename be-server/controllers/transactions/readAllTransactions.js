@@ -9,7 +9,6 @@ const readAllTransactions = async (req, res) => {
     // read all existing transactions
     const dbRes = await pool.query(queryAllTransactions);
     const data = dbRes.rows;
-    console.log(data);
 
     // send response with all transactions of the user
     res

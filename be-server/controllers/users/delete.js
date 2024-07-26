@@ -13,7 +13,7 @@ const deleteUserCtrl = async (req, res) => {
     if (data.length === 0) {
       return res.status(404).json({ message: "User not found" });
     }
-    
+
     await pool.query(deleteUserById, [userId]);
     res.status(201).json({ message: "Succesfully deleted the user" });
   } catch (error) {

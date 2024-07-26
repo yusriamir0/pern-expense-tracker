@@ -1,6 +1,5 @@
 import express from "express";
 import usersRoute from "./routes/users/usersRoute.js";
-
 import transactionsRoute from "./routes/transactions/transactionsRoute.js";
 import "./config/connection.js ";
 import { databaseConnect } from "./config/connection.js";
@@ -29,6 +28,15 @@ app.use("/api/v1/transactions", transactionsRoute);
 
 // ERROR HANDLERS
 app.use(globalErrHandler);
+
+// * PORT LISTENING
+app.use(
+  (err, req, res, next) => {
+    console.error(err.stack);
+    res.status(500).send("Something broke!");
+  }
+  // app.listen(3000, () => console.log("Server is up and running on port 3000!"))
+);
 
 // listen to the server
 const PORT = process.env.PORT;
