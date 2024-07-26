@@ -1,4 +1,10 @@
+import { useContext } from "react";
+import authContext from "../context/AuthContext/authContext";
+
 const Login = () => {
+  const state = useContext(authContext);
+  console.log(state);
+
   return (
     <>
       <section className="py-24 md:py-32 bg-white">
@@ -11,10 +17,7 @@ const Login = () => {
             </div>
             <form>
               <div className="mb-6">
-                <label
-                  className="block mb-2 text-coolGray-800 font-medium"
-                  htmlFor
-                >
+                <label className="block mb-2 text-coolGray-800 font-medium">
                   Email
                 </label>
                 <input
@@ -25,10 +28,7 @@ const Login = () => {
                 />
               </div>
               <div className="mb-4">
-                <label
-                  className="block mb-2 text-coolGray-800 font-medium"
-                  htmlFor
-                >
+                <label className="block mb-2 text-coolGray-800 font-medium">
                   Password
                 </label>
                 <input
